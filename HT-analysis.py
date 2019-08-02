@@ -46,6 +46,7 @@
 
 # import standard libraries
 import csv     # i/o of csv files
+import datetime   # manage date time formats
 import inspect # to get variable names
 import os      # access files on drive
 import re      # regulr expression to find strings
@@ -203,15 +204,67 @@ else:
                 
     tripidx.sort()    
     debug_val_type(tripidx)  # debug code:  target_url
+    tripid_range = len(tripidx) + 1  #use later for range where end=n+1
     print ("\t count =",len(tripidx)) 
         
     with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/tripidx.csv', 'w') as csvFile:
         writer = csv.writer(csvFile)
-        writer.writerows(tripidx)
+        writer.writerows([tripidx])  #https://stackoverflow.com/questions/15129567/csv-writer-writing-each-character-of-word-in-separate-column-cell
             
     csvFile.close()
             
     # close browser - choose appropriate
     #browser.close()  # doesn’t always stop the web driver that’s running in background
     browser.quit()  # warning: kills all instances of Chrome and Chromedriver
+
+
+# 4. Scrape ramblr to obtain trail journal data
+# ----------------------------------------------------------------------
+
+if os.path.isfile('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv'):  
+    console_msg('Importing heysen_data.csv into tripidx[] list')
+    
+    with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv', 'r') as f:
+        reader = csv.reader(f)
+        tripidx = list(reader)
+        
+    debug_val_type(tripidx)
+    
+else:
+    
+    console_msg('heysen_data.csv file does not exist. \n\tWill scrape ramblr.com for data')
+
+    # ------------------------------------------------------------------
+    # Create list of URLs to scrape in format of 
+    #   webpage/web/mymap/trip/user_id/trip_id
+    #   target_url = "https://www.ramblr.com/web/mymap/trip/478170/tripidx/"
+    
+    URL_prefix = "https://www.ramblr.com/web/mymap/trip/478170/"
+    
+    URLs = []  #must first create empty list to append to within for loop
+    
+    #TODO - fix next line of code
+    #page_numbers = [str(x) for x in range(1,tripid_range)]  #list comprehension; create list of strings
+
+    
+    for tripid in tripidx:
+        URL = (URL_prefix + str(tripid))
+        URLs.append(URL)
+        debug_val_type(URL)  # debug code:  target URLs
+
+    # ------------------------------------------------------------------
+    # Capture web page info for each URL
+    
+    
+    options = webdriver.ChromeOptions()
+    options.headless = True
+
+    browser_path = r"/Applications/chromedriver"
+    browser = webdriver.Chrome(executable_path=browser_path,
+                                options=options) 
+
+    
+    for URL in URLs:
+        target_url = URL
+
 
