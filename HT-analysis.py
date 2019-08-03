@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  HT-analysis.py
@@ -24,8 +24,8 @@
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # PURPOSE:
 # 
-# Overarching purpose is to begin to learn Python so apologies for poor
-#   structure & code.  We all have to start somewhere!  
+# My overarching purpose is to begin to learn Python so apologies for  
+#   the kludgy structure & code.  We all have to start somewhere!  
 #
 # Workflow for this python program: 
 #  1) Scrape ramblr.com website and extract list of tripidx values 
@@ -59,6 +59,8 @@ import requests # 3rd party Requests library to querry website
 
 # import specific third party libaries
 from selenium import webdriver
+from pprint import pprint
+
 
 # 2. functions
 # ----------------------------------------------------------------------
@@ -118,9 +120,7 @@ def get_dynamic_HTML(target_url):
     browser.close()  # doesn’t always stop the web driver that’s running in background
     #browser.quit()  # warning: kills all instances of Chrome and Chromedriver
 
-
-
-# ----------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Debugging
 #   turn debugging on (True) or off (False)
 
@@ -130,8 +130,8 @@ if debug_on:
     console_msg('Debugging is ON')
 else:
     console_msg('Debugging is OFF')
-  
-#-----------------------------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 # 3. Create list of search page strings (list URLs)
 # ----------------------------------------------------------------------
@@ -145,10 +145,15 @@ if os.path.isfile('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/t
     console_msg('Importing tripidx.csv into tripidx[] list')
     
     with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/tripidx.csv', 'r') as f:
-        reader = csv.reader(f)
+        tripidx=[]
+        reader = csv.reader(f, delimiter=',')
         tripidx = list(reader)
         
-    debug_val_type(tripidx)
+    debug_val_type(tripidx)  # debug code:  page numbers
+    print(tripidx[0][1])
+    print ("\t count =",len(tripidx)) 
+
+    
     
 else:
     
@@ -169,7 +174,6 @@ else:
         
         
     # Capture tripidx data from target web pages and load into a list
-        
     tripidx=[]	#create empty list to extend data into within for loop
     
     for URL in URLs:
@@ -180,21 +184,14 @@ else:
         # Example URL for testing:
         #target_url = "https://www.ramblr.com/web/mymap/trip/478170#h=1&u_uid=478170&type=1&unit=1&page=1&stext=&active=0&sort=10&receivegid="
 
-        
-        # Query the website and return the html to the variable 'page'
-        #page = requests.get(target_url)
-        
-
         # get JS generated dynamic HTML page
         JS_dynamic_HTML = get_dynamic_HTML(target_url)
-        
         
         # Parse  JS_dynamic_HTML  variable, and store it in Beautiful Soup format
         soup_JS_dynamic = bs4.BeautifulSoup(JS_dynamic_HTML, "lxml")
         
         # use beautiful soup function prettify to display page
         #print (soup_JS_dynamic.prettify()) # comment out as not needed once captured to text file
-        
         
         # Extract tripidx values from Trail Journal web page
             
@@ -227,8 +224,7 @@ else:
     csvFile.close()
             
 
-
-# 4. Scrape ramblr to obtain trail journal data
+# 4. Scrape ramblr.com to obtain trail journal data
 # ----------------------------------------------------------------------
 
 if os.path.isfile('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv'):  
@@ -253,28 +249,32 @@ else:
     
     URLs = []  #must first create empty list to append to within for loop
     
-    #TODO - fix next line of code
-    #page_numbers = [str(x) for x in range(1,tripid_range)]  #list comprehension; create list of strings
-
     
-    for tripid in tripidx:
-        URL = (URL_prefix + str(tripid))
+    #list comprehension to convert tripidx list to list of strings
+    # for reference, same as following 3 lines below
+    # ids = []
+    # for tripid in tripidx[0]:
+        # ids.append(str(tripid))    
+    
+    ids = [str(tripid) for tripid in tripidx[0]]  #list comprehension
+    
+    debug_val_type(ids)
+    print ("\t count =",len(ids)) 
+
+    for id in ids:
+        URL = (URL_prefix + id)
         URLs.append(URL)
         debug_val_type(URL)  # debug code:  target URLs
+
+
 
     # ------------------------------------------------------------------
     # Capture web page info for each URL
     
     
-    # options = webdriver.ChromeOptions()
-    # options.headless = True
-
-    # browser_path = r"/Applications/chromedriver"
-    # browser = webdriver.Chrome(executable_path=browser_path,
-                                # options=options) 
 
     
-    for URL in URLs:
-        target_url = URL
+    # for URL in URLs:
+        # target_url = URL
 
 
