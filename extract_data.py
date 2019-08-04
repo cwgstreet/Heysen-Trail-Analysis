@@ -28,6 +28,79 @@ import bs4      # beautiful soup 4 library to parse website
 import lxml     # lxml to parse website
 import requests # requests to get http
 
+if __name__ == "__main__":
+    
+    # Avoid unecessary web scraping if trail_data list exists as csv file    
+    # ------------------------------------------------------------------
+    
+    if os.path.isfile('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv'):  
+        debug.debug.console_msg('Importing heysen_data.csv into HT_data[] list')
+        
+        with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv', 'r') as f:
+            reader = csv.reader(f)
+            tripidx = list(reader)
+            
+        debug.debug_val_type(HT_data, debug_flag)
+        
+    else:
+        
+        debug.console_msg('heysen_data.csv file does not exist. \n\tWill scrape ramblr.com for data')
+    
+        # ------------------------------------------------------------------
+        # Create list of URLs to scrape in format of 
+        #   webpage/web/mymap/trip/user_id/trip_id
+        #   target_url = "https://www.ramblr.com/web/mymap/trip/478170/tripidx/"
+        
+        URL_prefix = "https://www.ramblr.com/web/mymap/trip/478170/"
+        
+        URLs = []  #must first create empty list to append to within for loop
+        
+        
+        #list comprehension to convert tripidx list to list of strings
+        # for reference, same as following 3 lines below
+        # ids = []
+        # for tripid in tripidx[0]:
+            # ids.append(str(tripid))    
+        
+        ids = [str(tripid) for tripid in tripidx[0]]  #list comprehension
+        
+        debug.debug_val_type(ids, debug_flag)
+        print ("\t count =",len(ids)) 
+    
+        for id in ids:
+            URL = (URL_prefix + id)
+            URLs.append(URL)
+            debug.debug_val_type(URL, debug_flag)  # debug code:  target URLs
+    
+        # ------------------------------------------------------------------
+        # Capture web page info for each URL
+        
+        for URL in URLs:
+            #target_url = URL
+            target_url = "https://www.ramblr.com/web/mymap/trip/478170/1576327 #debug test case"
+            debug.debug_val_type(target_url, debug_flag)  # debug code:  target URLs
+    
+            # get JS generated dynamic HTML page
+            JS_dynamic_HTML = get_dynamic_HTML(target_url)
+            
+            # Parse  JS_dynamic_HTML  variable, and store it in Beautiful Soup format
+            soup_JS_dynamic = bs4.BeautifulSoup(JS_dynamic_HTML, "lxml")
+            
+            # use beautiful soup function prettify to display page
+            #print (soup_JS_dynamic.prettify()) # comment out as not needed once captured to text file
+            
+            Title = soup_JS_dynamic.h1
+            Title = str(Title)
+            title=Title[Title.find("h1>")+3:Title.find("</h1>")]
+            print ("\nTitle =",title)
+            print ("\tTitle type:",(type(title))) #debug
+    
+                
+            break  #temporary - only perform one pass of for loop
+            
+    
+
+
 
 # 2. Capture web page
 

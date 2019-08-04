@@ -28,6 +28,14 @@ import bs4      # beautiful soup 4 library to parse website
 import lxml     # lxml to parse website
 import requests # requests to get http
 
+#def debug_status(debug_flag=True):
+def debug_status(debug_flag=True):
+    """Displays a debugging status message to console"""
+    if debug_flag:  #when true
+        console_msg('Debugging is ON')
+    else:
+        console_msg('Debugging is OFF')
+
 def retrieve_name(var):
     """
     Gets the name of var. Does it from the out-most frame inner-wards.
@@ -40,7 +48,6 @@ def retrieve_name(var):
         if len(names) > 0:
             return names[0]
 
-
 def console_msg(msg):
     """Display a message on console window"""
     clear = "\n" * 2
@@ -51,15 +58,15 @@ def console_msg(msg):
 
 def debug_val_type(debug_target, debug_flag):
     """Prints variable name, value and type to console window
-        when switch debug_flag = true"""
+        when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
         print("\n"+retrieve_name(debug_target)+" = ",debug_target)
         print("\t"+retrieve_name(debug_target)+" type:",type(debug_target))
 
-def debug_count(debug_target):
-    """Prints list element count to console window
-        when switch debug_flag = true"""
+def debug_count(debug_target, debug_flag):
+    """Prints element count of list to console window
+        when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
-        print("\n"+retrieve_name(debug_target)+" count: ",len(debug_target))
+        print("\n"+retrieve_name(debug_target)+"count: ",len(debug_target))
