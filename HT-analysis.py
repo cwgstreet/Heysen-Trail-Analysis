@@ -17,6 +17,15 @@
 # My overarching purpose is to begin to learn Python so apologies for  
 #   the kludgy structure & code.  We all have to start somewhere!  
 #
+#  Main script: 
+#       HT-analysis.py
+#
+#  Modules:
+#       config.py - global variables
+#       debug.py - debug nd console message functions
+#       extract_tripidx.py - extrap or load trip id's
+#       extract_data.py - extract or load trail journal data
+#
 # Workflow for this python program: 
 #  1) Scrape ramblr.com website and extract list of tripidx values 
 #      (trip IDs) from my Heysen Trail multi-day thru-hike journals
@@ -43,8 +52,9 @@ import time    # time to allow sleep pause for JS to catch up
 
 # import HT-analysis modules
 #import extract_data  :TODO  uncomment once module is working
-import debug
-import extract_tripidx
+import config           #global variables
+import debug            #debug functions - variable values / types / counts
+import extract_tripidx  #extrap or load trip id's
 
 # import third party libraries
 #import bs4      # beautiful soup 4 library to parse website

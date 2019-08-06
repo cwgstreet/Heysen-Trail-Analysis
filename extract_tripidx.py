@@ -22,6 +22,7 @@ import re           # regular expressions to extract strings
 import time         # time to allow sleep pause for JS to catch up
 
 # import HT-analysis modules
+import config       #global variables
 import debug        #debug functions - variable values / types / counts
 
 #import third party libary specific imports
@@ -44,7 +45,6 @@ def get_dynamic_HTML(target_url):
     
     browser_path = r"/Applications/chromedriver"   #local path
     
-    
     browser = webdriver.Chrome(executable_path=browser_path,
                                 options=options) 
     
@@ -55,27 +55,29 @@ def get_dynamic_HTML(target_url):
 
     return JS_dynamic_HTML
     
-    # close browser - choose appropriate
+    # close browser - choose appropriate:
     browser.close()  # doesn’t always stop the web driver that’s running in background
     #browser.quit()  # warning: kills all instances of Chrome and Chromedriver
 
 def get_tripidx(debug_flag):
     """Extract gstreet trip ids (tripidx) from rambl.com html """
+   
     # Avoid unecessary web scraping if tripidx list exists as csv file    
     if os.path.isfile('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/tripidx.csv'):  
         debug.console_msg('Importing tripidx.csv into tripidx[] list')
         
         with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/tripidx.csv', 'r') as f:
-            tripidx=[]
             reader = csv.reader(f, delimiter=',')
-            tripidx = list(reader)
+            config.tripidx = list(reader)
             
-        debug.debug_val_type(tripidx, debug_flag)  # debug code:  page numbers
-        print(tripidx[0][1])
+        debug.debug_val_type(config.tripidx, debug_flag)  # debug code:  page numbers
+        debug.debug_count(config.tripidx, debug_flag)
+
+        print(config.tripidx[0][1])
         #print ("\t count =", len(tripidx))
-        debug.debug_count(tripidx, debug_flag)
+        debug.debug_count(config.tripidx, debug_flag)
+
  
-    
     else:
         
         debug.console_msg('tripidx.csv file does not exist. \n\tWill scrape ramblr.com for data')
@@ -94,9 +96,6 @@ def get_tripidx(debug_flag):
             debug.debug_val_type(URL, debug_flag)  # debug code:  page numbers
             
         # Capture tripidx data from target web pages and load into a list
-        
-        tripidx=[]	#create empty list to extend data into within for loop
-        
         for URL in URLs:
         
             # specify the target url URL in format of 
@@ -119,16 +118,16 @@ def get_tripidx(debug_flag):
             
             tripidx_extract =[str(s) for s in re.findall(r'data-tripidx="(\d+)', tripidx_string)]
                 
-            tripidx.extend(tripidx_extract)
+            config.tripidx.extend(tripidx_extract)
                     
-        tripidx.sort()    
+        config.tripidx.sort()    
         debug.debug_val_type(tripidx, debug_flag)  # debug code:  target_url
         debug.debug_count(tripidx, debug_flag)
-            
-        # save scraped tripidx data to csv file
+                    
+        # write and save scraped tripidx data to csv file
         with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/tripidx.csv', 'w') as csvFile:
             writer = csv.writer(csvFile)
-            writer.writerows([tripidx])  #https://stackoverflow.com/questions/15129567/csv-writer-writing-each-character-of-word-in-separate-column-cell
+            writer.writerows([config.tripidx])  #https://stackoverflow.com/questions/15129567/csv-writer-writing-each-character-of-word-in-separate-column-cell
                 
         csvFile.close()
 

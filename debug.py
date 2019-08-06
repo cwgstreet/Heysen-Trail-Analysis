@@ -13,22 +13,18 @@
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-# 1. Import standard libraries
+# import libraries
+import datetime     # manage date time formats
+import inspect      # to get variable names
+import re           # regular expressions to extract strings
+import time         # time to allow sleep pause for JS to catch up
 
-#import libraries
-import datetime   # manage date time formats
-import inspect # to get variable names
-import re       # regular expressions to extract strings
-import time       # time to allow sleep pause for JS to catch up
+# import third party libary specific imports
+import bs4          # beautiful soup 4 library to parse website
+import lxml         # lxml to parse website
+import requests     # requests to get http
 
 
-
-#import third party libary specific imports
-import bs4      # beautiful soup 4 library to parse website
-import lxml     # lxml to parse website
-import requests # requests to get http
-
-#def debug_status(debug_flag=True):
 def debug_status(debug_flag=True):
     """Displays a debugging status message to console"""
     if debug_flag:  #when true
@@ -36,17 +32,17 @@ def debug_status(debug_flag=True):
     else:
         console_msg('Debugging is OFF')
 
+
 def retrieve_name(var):
-    """
-    Gets the name of var. Does it from the out-most frame inner-wards.
+    """ Gets the name of var. Does it from the out-most frame inner-wards.
     :param var: variable to get name from.
-    :return: string
-    """
+    :return: string """
     #https://stackoverflow.com/questions/18425225/getting-the-name-of-a-variable-as-a-string/18425523
     for fi in reversed(inspect.stack()):
         names = [var_name for var_name, var_val in fi.frame.f_locals.items() if var_val is var]
         if len(names) > 0:
             return names[0]
+
 
 def console_msg(msg):
     """Display a message on console window"""
@@ -64,9 +60,33 @@ def debug_val_type(debug_target, debug_flag):
         print("\n"+retrieve_name(debug_target)+" = ",debug_target)
         print("\t"+retrieve_name(debug_target)+" type:",type(debug_target))
 
+
 def debug_count(debug_target, debug_flag):
     """Prints element count of list to console window
         when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
         print("\n"+retrieve_name(debug_target)+"count: ",len(debug_target))
+  
+def debug_date(debug_target, debug_flag):
+    """Prints date value to console when switch debug_flag = True"""
+    if debug_flag:
+        var_name = str(debug_target)
+        print('\nDate:', debug_target.date())   
+
+
+def debug_time(debug_target, debug_flag):
+    """Prints time value to console when switch debug_flag = True"""
+    if debug_flag:
+        var_name = str(debug_target)
+        print('Time:', debug_target.time())   
+   
+        
+def debug_datetime(debug_target, debug_flag):
+    """Prints date, time and date-time values to console when switch debug_flag = True"""
+    if debug_flag:
+        var_name = str(debug_target)
+        print('\nDate:', debug_target.date())   
+        print('Time:', debug_target.time())   
+        print('Date-time:', debug_target)     
+
