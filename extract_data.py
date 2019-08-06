@@ -47,7 +47,6 @@ def get_dynamic_HTML(target_url):
     
     browser_path = r"/Applications/chromedriver"   #local path
     
-    
     browser = webdriver.Chrome(executable_path=browser_path,
                                 options=options) 
     
@@ -59,15 +58,14 @@ def get_dynamic_HTML(target_url):
     return JS_dynamic_HTML
     
     # close browser - choose appropriate
-    browser.close()  # doesn’t always stop the web driver that’s running in background
     #browser.quit()  # warning: kills all instances of Chrome and Chromedriver
+    browser.close()  # doesn’t always stop the web driver that’s running in background
 
 
 def get_data(debug_flag):
     """Extract gstreet trip data from rambl.com html """
     
     # Avoid unecessary web scraping if trail_data list exists as csv file    
-    
     if os.path.isfile('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv'):  
         debug.debug.console_msg('Importing heysen_data.csv into HT_data[] list')
         
@@ -137,14 +135,14 @@ def get_data(debug_flag):
             
             print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
             
-                        #------- Title (title) ---------
+            #------- Title (title) ---------
             Title = soup_JS_dynamic.h1
             Title = str(Title)
-            title=Title[Title.find("h1>")+3:Title.find("</h1>")]
+            title = Title[Title.find("h1>")+3:Title.find("</h1>")]
             debug.debug_val_type(title, debug_flag)
             
             #------- Day (day)---------
-            day=[int(s) for s in re.findall(r'\b\d+\b', Title)]
+            day = [int(s) for s in re.findall(r'\b\d+\b', Title)]
             debug.debug_val_type(day, debug_flag)
               
             #------- Start Location (start_location) ---------
@@ -181,38 +179,40 @@ def get_data(debug_flag):
             durations = re.findall("\d+[h]\s\d+[m]\s\d+[s]", durations) 
             debug.debug_val_type(durations, debug_flag)
             
+            #------- Difficulty (difficulty)---------
+            difficulty = soup_JS_dynamic.find_all('li', class_ ="aft")
+            difficulty = str(difficulty)
+            difficulty = re.findall("Easy|Moderate|Hard|Extreme", difficulty) 
+            debug.debug_val_type(difficulty, debug_flag)
+
             #-------Total Duration (total_duration) ---------
-            total_duration=durations[0]            
+            total_duration = durations[0]            
             total_duration_time_obj = datetime.datetime.strptime(total_duration, '%Hh %Mm %Ss')   
             total_duration = total_duration_time_obj   
             debug.debug_time(total_duration, debug_flag)
+            total_duration = [total_duration]
+            debug.debug_val_type(total_duration, debug_flag)
             
             #-------Active Duration (active_duration) ---------
-            active_duration=durations[1]
-            # print("\nActive Duration =",active_duration)  #debug
-            # print ("\tActive Duration type:",(type(active_duration)))
+            active_duration = durations[1]
             active_duration_time_obj = datetime.datetime.strptime(active_duration, '%Hh %Mm %Ss')   
             active_duration = active_duration_time_obj
             debug.debug_time(active_duration, debug_flag)
-            # print('Active Time:', active_duration_time_obj.time())   #debug
-            
+            active_duration = [active_duration]
+            debug.debug_val_type(active_duration, debug_flag)
+
             #-------Paused Duration (paused_duration) ---------
-            paused_duration=durations[2]
-            # print("\nPaused Duration =",paused_duration)  #debug
-            # print ("\tPaused Duration type:",(type(paused_duration)))
+            paused_duration = durations[2]
             paused_duration_time_obj = datetime.datetime.strptime(paused_duration, '%Hh %Mm %Ss')   
             paused_duration = paused_duration_time_obj
             debug.debug_time(paused_duration, debug_flag)
-            # print('Paused Time:', paused_duration_time_obj.time())   #debug
+            paused_duration = [paused_duration]
+            debug.debug_val_type(paused_duration, debug_flag)
             
-            #print('############################################################')  #make it easier to find this section in terminal output
-                        
-            #print('\n############################################################')  #make it easier to find this section in terminal output
-
             #------- Distance (distance) ---------
             distance = soup_JS_dynamic.find('div', class_ ="content_distance")
             distance = str(distance)   # convests distance into string
-            distance=[float(s) for s in re.findall(r'\d+\.\d+', distance)]
+            distance = [float(s) for s in re.findall(r'\d+\.\d+', distance)]
             debug.debug_val_type(distance, debug_flag)
             
             #------- Total Ascent (total_ascent)---------
@@ -232,12 +232,6 @@ def get_data(debug_flag):
             avg_speed = str(avg_speed)   # convests avg_speed into string
             avg_speed = [float(s) for s in re.findall(r'\d+\.\d+', avg_speed)]
             debug.debug_val_type(avg_speed, debug_flag)
-            
-            #------- Difficulty (difficulty)---------
-            difficulty = re.findall("Easy|Moderate|Hard|Extreme", durations) 
-            # difficulty = str(difficulty)
-            print ("\ndifficulty =", difficulty)
-            print ("\tdifficulty type:", (type(difficulty))) #debug
             
             
             # concatenate trail data into a list (row) in desired order
@@ -292,6 +286,9 @@ if __name__ == "__main__":
 
 #print('############################################################')  #make it easier to find this section in terminal output
 
+#print('############################################################')  #make it easier to find this section in terminal output
+            
+#print('\n############################################################')  #make it easier to find this section in terminal output
 
 
 
