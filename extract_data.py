@@ -23,9 +23,10 @@ import re           # regular expressions to extract strings
 import time         # time to allow sleep pause for JS to catch up
 
 # import HT-analysis modules
-import config           #global variables
-import debug            #debug functions - variable values / types / counts
-import extract_tripidx  #extrap or load trip id's
+import config           # global variables
+import debug            # debug functions - variable values/types/counts
+import extract_tripidx  # extrap or load trip id's
+import extract_page     # extract dynamic JS generated (inner) HTML
 
 #import third party libary specific imports
 import bs4      # beautiful soup 4 library to parse website
@@ -36,51 +37,54 @@ import requests # requests to get http
 from selenium import webdriver
 
 
-def get_dynamic_HTML(target_url):
-    """uses ChromeDriver to extract dynamic JS generated (inner) HTML"""
+# def get_dynamic_HTML(target_url):
+    # """uses ChromeDriver to extract dynamic JS generated (inner) HTML"""
     
-    # run headless mode; runs faster & consumes less resources
-    #  see https://masterwebscrapingwithpython.com/book/download-html.html
-    options = webdriver.ChromeOptions()
-    options.headless = True
+    # # run headless mode; runs faster & consumes less resources
+    # #  see https://masterwebscrapingwithpython.com/book/download-html.html
+    # options = webdriver.ChromeOptions()
+    # options.headless = True
 
     
-    browser_path = r"/Applications/chromedriver"   #local path
+    # browser_path = r"/Applications/chromedriver"   #local path
     
-    browser = webdriver.Chrome(executable_path=browser_path,
-                                options=options) 
+    # browser = webdriver.Chrome(executable_path=browser_path,
+                                # options=options) 
     
-    browser.get(target_url) #navigate to the page
+    # browser.get(target_url) #navigate to the page
 
-    time.sleep(5)  #give Java Script time to catch up otherwise fails
-    JS_dynamic_HTML = browser.page_source  #https://stackoverflow.com/questions/8049520/web-scraping-javascript-page-with-python
+    # time.sleep(5)  #give Java Script time to catch up otherwise fails
+    # JS_dynamic_HTML = browser.page_source  #https://stackoverflow.com/questions/8049520/web-scraping-javascript-page-with-python
 
-    return JS_dynamic_HTML
+    # return JS_dynamic_HTML
     
-    # close browser - choose appropriate
-    #browser.quit()  # warning: kills all instances of Chrome and Chromedriver
-    browser.close()  # doesn’t always stop the web driver that’s running in background
+    # # close browser - choose appropriate
+    # #browser.quit()  # warning: kills all instances of Chrome and Chromedriver
+    # browser.close()  # doesn’t always stop the web driver that’s running in background
 
 
 def get_data(debug_flag):
     """Extract gstreet trip data from rambl.com html """
     
-    # Avoid unecessary web scraping if trail_data list exists as csv file    
-    if os.path.isfile('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv'):  
+    PATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/"
+    NAME = "heysen_data.csv"
+
+    # Avoid unecessary web scraping if HT_data list exists as csv file    
+    if os.path.isfile(PATH + NAME):  
         debug.debug.console_msg('Importing heysen_data.csv into HT_data[] list')
         
-        with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv', 'r') as f:
-            reader = csv.reader(f)
-            config.tripidx = list(reader)
+        config.HT_data = file_io.csv_read(PATH, NAME)
+        # with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/heysen_data.csv', 'r') as f:
+            # reader = csv.reader(f)
+            # config.tripidx = list(reader)
             
-        debug.debug_val_type(HT_data, debug_flag)
+        debug.debug_val_type(config.HT_data, debug_flag)
         
     else:
         
-        debug.console_msg('heysen_data.csv file does not exist. \n\tWill scrape ramblr.com for data')
+        debug.console_msg('heysen_data.csv file does not exist \n\t  Will scrape ramblr.com for data')
     
-        # Create list of URLs to scrape in format of 
-        #   webpage/web/mymap/trip/user_id/trip_id
+        # Create list of URLs to scrape in format of webpage/web/mymap/trip/user_id/trip_id
         #   target_url = "https://www.ramblr.com/web/mymap/trip/478170/tripidx/"
         
         URL_prefix = "https://www.ramblr.com/web/mymap/trip/478170/"
@@ -91,7 +95,7 @@ def get_data(debug_flag):
         # for reference, same as following 3 lines below
         # ids = []
         # for tripid in tripidx[0]:
-            # ids.append(str(tripid))    
+        #     ids.append(str(tripid))    
         ids = [str(tripid) for tripid in config.tripidx[0]]  #list comprehension
         
         debug.debug_val_type(ids, debug_flag)
@@ -117,7 +121,7 @@ def get_data(debug_flag):
             debug.debug_val_type(target_url, debug_flag)  # debug code:  target URLs
     
             # get JS generated dynamic HTML page
-            JS_dynamic_HTML = get_dynamic_HTML(target_url)
+            JS_dynamic_HTML = extract_page.get_dynamic_HTML(debug_flag, target_url)
             
             # Parse  JS_dynamic_HTML  variable, and store it in Beautiful Soup format
             soup_JS_dynamic = bs4.BeautifulSoup(JS_dynamic_HTML, "lxml")
