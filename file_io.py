@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+  
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# Module name: dfile_io.py
+# Purpose:     write / read csv files
+# 
+# Notes:
+#
+# Copyright:   2019, release under GPL3. See LICENSE file for details
+#              Carl W Greenstreet <cwgstreet@gmail.com>
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+# import libraries
+import csv          # i/o of csv files
+import os           # access files on drive
+import inspect      # to get variable names
+
+# import HT-analysis modules
+import config       # global variables
+import debug        # debug functions - variable values / types / counts
+
+
+def csv_read(PATH, NAME):
+    """reads a csv file into list called contents"""
+    with open(PATH + NAME, 'r') as f:
+        reader = csv.reader(f, delimiter=',')
+        contents = list(reader)
+    flat_list = [item for sublist in contents for item in sublist] #https://stackoverflow.com/questions/952914/how-to-make-a-flat-list-out-of-list-of-lists
+    return flat_list
+
+
+def csv_write(PATH, NAME, contents):
+    """writes list called contents into a csv file"""
+    with open(PATH + NAME, 'w') as csvFile:
+            writer = csv.writer(csvFile)
+            writer.writerows([config.tripidx])  #https://stackoverflow.com/questions/15129567/csv-writer-writing-each-character-of-word-in-separate-column-cell
+    csvFile.close()
+
+
+# test code follows:          
+if __name__ == "__main__":
+    
+    # Set debugging status: on=True or off=False
+    debug_flag = True
+    debug.debug_status(debug_flag)
+    
+    
+    # ---------------- Test CSV Read -----------------------------------
+    PATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/"
+    NAME = "tripidx.csv"
+    
+    config.tripidx = csv_read(PATH, NAME)
+    
+    debug.debug_val_type(config.tripidx, debug_flag)  # debug code:  page numbers
+    debug.debug_count(config.tripidx, debug_flag)
+    
+    
+    # ---------------- Test CSV Write -----------------------------------
+    NAME = "delete_test.csv"
+    
+    csv_write(PATH, NAME, config.tripidx)
+    
+    

@@ -111,7 +111,9 @@ def get_data(debug_flag):
         
         for URL in URLs:
             #target_url = URL
-            target_url = "https://www.ramblr.com/web/mymap/trip/478170/1576327 #debug test case"
+            # target_url = "https://www.ramblr.com/web/mymap/trip/478170/1576327" #debug test case
+            print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
+            target_url = "https://www.ramblr.com/web/mymap/trip/478170/1443174"   #debug test case - no log data
             debug.debug_val_type(target_url, debug_flag)  # debug code:  target URLs
     
             # get JS generated dynamic HTML page
@@ -135,7 +137,7 @@ def get_data(debug_flag):
             
             print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
             
-            #------- Title (title) ---------
+            #------- extract title string ---------
             Title = soup_JS_dynamic.h1
             Title = str(Title)
             title = Title[Title.find("h1>")+3:Title.find("</h1>")]
@@ -150,28 +152,58 @@ def get_data(debug_flag):
             after_keyword = Title.partition(keyword)
             keyword2 = ' to '           # split walk title into tuple at keyword
             start_stop = after_keyword[2].partition(keyword2)
-            start_location = start_stop[0]     #assigns start location to first tuple element 
-            debug.debug_val_type(start_location, debug_flag)
+            start = start_stop[0]     #assigns start location to first tuple element 
+            start = [start]
+            debug.debug_val_type(start, debug_flag)
             
             #------- Stop Location (stop_location) ---------
             keyword3 = '<'  #change split keyword to further seperate third tuple element
             start_stop2 = start_stop[2].partition(keyword3)
-            stop_location = start_stop2[0]
-            debug.debug_val_type(stop_location, debug_flag)
+            stop = start_stop2[0]
+            stop = [stop]
+            debug.debug_val_type(stop, debug_flag)
+            
+            #------- Title (title) ---------
+            title=Title[Title.find("h1>")+3:Title.find("</h1>")]
+            title = [title]
+            debug.debug_val_type(title, debug_flag)
             
             #-------Council (council)) ---------
             location = soup_JS_dynamic.find('div', class_ ="content_addr")
             location = str(location)     # convests location into string
             council = location[location.find(">")+1:location.find(",")]
+            council = [council]
             debug.debug_val_type(council, debug_flag)
-            
+
             #-------Recording Date (date) ---------
+            print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
             recording_date = soup_JS_dynamic.find('div', class_ ="content_recoding_time")
             recording_date = str(recording_date)     # timedate function requires string
+            recording_date = recording_date.strip()   # importnt to strio leading / trailing whitespace to avoid strptime format problems
+
             date_timestamp = recording_date[recording_date.find(":")+2:recording_date.find(" <")-5]
-            recording_date_time_obj = datetime.datetime.strptime(date_timestamp, '%b %d, %Y %I:%M %p')
+            debug.debug_val_type(date_timestamp, debug_flag)
+
+            try:
+                # normal strptime format below
+                recording_date_time_obj = datetime.datetime.strptime(date_timestamp, '%b %d, %Y %I:%M %p')
+            except ValueError:
+                # try alternative strptime format to match time data 'Apr 7, 2019'
+                recording_date_time_obj = datetime.datetime.strptime(date_timestamp, '%b %d, %Y')  
+                print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
+            except ValueError:
+                # unknown format
+                recording_date_time_obj = None
+                print("cannot parse recording date - unhknown format")
+                print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
+            
+            
+            
             date = recording_date_time_obj
             debug.debug_datetime(date, debug_flag)
+            date = [date]
+            debug.debug_val_type(date, debug_flag)
+
             
             #------- Extract all Durations (durations) ---------
             durations = soup_JS_dynamic.find_all('li', class_ ="aft")
@@ -183,6 +215,7 @@ def get_data(debug_flag):
             difficulty = soup_JS_dynamic.find_all('li', class_ ="aft")
             difficulty = str(difficulty)
             difficulty = re.findall("Easy|Moderate|Hard|Extreme", difficulty) 
+            # difficulty = [difficulty]
             debug.debug_val_type(difficulty, debug_flag)
 
             #-------Total Duration (total_duration) ---------
@@ -238,8 +271,8 @@ def get_data(debug_flag):
             heysen_row.append(title)
             heysen_row.append(day) 
             heysen_row.append(date)
-            heysen_row.append(start_location) 
-            heysen_row.append(stop_location)
+            heysen_row.append(start) 
+            heysen_row.append(stop)
             heysen_row.append(council)
             heysen_row.append(total_duration)
             heysen_row.append(active_duration)
@@ -252,6 +285,15 @@ def get_data(debug_flag):
             
             debug.debug_val_type(heysen_row, debug_flag)
 
+
+            # zippedList = list(zip(title, day, date, start, 
+                                    # stop, council, total_duration, 
+                                    # active_duration, paused_duration, 
+                                    # distance, avg_speed, highest_point, 
+                                    # total_ascent, difficulty ))
+            
+            # debug.debug_val_type(zippedList, debug_flag)
+        
             
             break  #temporary - only perform one pass of for loop
 
