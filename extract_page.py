@@ -15,23 +15,17 @@
 
 # 1. Import standard libraries
 
-#import libraries
-#import csv          # i/o of csv files
-import datetime     # manage date time formats
-import os           # access files on drive
+# import libraries
 import pprint as pp # pretty print or improved print formation
-import re           # regular expressions to extract strings
 import time         # time to allow sleep pause for JS to catch up
 
 # import HT-analysis modules
 import config           #global variables
 import debug            #debug functions - variable values / types / counts
-#import extract_tripidx  #extrap or load trip id's
 
-#import third party libary specific imports
+# import third party libary specific imports
 import bs4      # beautiful soup 4 library to parse website
 import lxml     # lxml to parse website
-import requests # requests to get http
 
 # import specific third party libaries
 from selenium import webdriver
@@ -45,7 +39,6 @@ def get_dynamic_HTML(debug_flag, target_url):
     options = webdriver.ChromeOptions()
     options.headless = True
 
-    
     browser_path = r"/Applications/chromedriver"   #local path
     
     browser = webdriver.Chrome(executable_path=browser_path,
@@ -56,8 +49,6 @@ def get_dynamic_HTML(debug_flag, target_url):
     time.sleep(5)  #give Java Script time to catch up otherwise fails
     dynamic_page = browser.page_source  #https://stackoverflow.com/questions/8049520/web-scraping-javascript-page-with-python
     config.JS_dynamic_HTML = bs4.BeautifulSoup(dynamic_page, "lxml")
-    #print("config.JS_dynamic_HTML type:", type(config.JS_dynamic_HTML))  #debug code - remove once bug is squashed
-    #return JS_dynamic_HTML
     
     # close browser - choose appropriate:
     browser.close()  # doesn’t always stop the web driver that’s running in background

@@ -16,4 +16,4 @@ JS_dynamic_HTML =[]
 #JS_dynamic_HTML = None  #null string?
 #JS_dynamic_HTML = lambda: None #empty object
 tripidx = []	
-heysen_data = []
+HT_data = []

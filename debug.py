@@ -52,6 +52,7 @@ def console_msg(msg):
           \n\t" +msg +"\
           \n+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
+
 def debug_val_type(debug_target, debug_flag):
     """Prints variable name, value and type to console window
         when switch debug_flag = True"""
@@ -67,6 +68,7 @@ def debug_count(debug_target, debug_flag):
     if debug_flag:
         var_name = str(debug_target)
         print("\n"+retrieve_name(debug_target)+"count: ",len(debug_target))
+ 
   
 def debug_date(debug_target, debug_flag):
     """Prints date value to console when switch debug_flag = True"""

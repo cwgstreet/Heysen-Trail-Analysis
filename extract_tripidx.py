@@ -15,25 +15,14 @@
 # 1. Import standard libraries
 
 #import libraries
-import csv          # i/o of csv files
-import datetime     # manage date time formats
 import os           # access files on drive
 import re           # regular expressions to extract strings
-import time         # time to allow sleep pause for JS to catch up
 
 # import HT-analysis modules
 import config       # global variables
 import debug        # debug functions - variable values / types / counts
 import extract_page # extract dynamic JS generated (inner) HTML
 import file_io      # write / read csv files to local disk
-
-#import third party libary specific imports
-import bs4          # beautiful soup 4 library to parse website
-import lxml         # lxml to parse website
-import requests     # requests to get http
-
-# import specific third party libaries
-from selenium import webdriver
 
 
 def get_tripidx(debug_flag):
@@ -47,22 +36,12 @@ def get_tripidx(debug_flag):
     if os.path.isfile(PATH + NAME):  #confirms file exists
         debug.console_msg('Importing tripidx.csv into tripidx[] list')
         
-        # with open('/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/tripidx.csv', 'r') as f:
-            # reader = csv.reader(f, delimiter=',')
-            # config.tripidx = list(reader)
-          
         config.tripidx = file_io.csv_read(PATH, NAME)
             
         debug.debug_val_type(config.tripidx, debug_flag)  # debug code:  page numbers
         debug.debug_count(config.tripidx, debug_flag)
 
-        # print(config.tripidx[0][1])
-        # #print ("\t count =", len(tripidx))
-        # debug.debug_count(config.tripidx, debug_flag)
-
- 
     else:
-        
         debug.console_msg('tripidx.csv file does not exist \n\tWill scrape ramblr.com for data')
         
         page_numbers = [str(x) for x in range(1,5)]  #list comprehension; create list of strings
@@ -84,6 +63,7 @@ def get_tripidx(debug_flag):
             # specify the target url URL in format of 
             #   webpage/web/mymap/trip/user_id/trip_id
             target_url = URL
+            
             # Example URL for testing:
             #target_url = "https://www.ramblr.com/web/mymap/trip/478170#h=1&u_uid=478170&type=1&unit=1&page=1&stext=&active=0&sort=10&receivegid="
     

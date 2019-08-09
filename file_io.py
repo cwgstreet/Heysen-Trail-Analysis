@@ -3,7 +3,7 @@
 
   
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# Module name: dfile_io.py
+# Module name: file_io.py
 # Purpose:     write / read csv files
 # 
 # Notes:
@@ -16,7 +16,7 @@
 # import libraries
 import csv          # i/o of csv files
 import os           # access files on drive
-import inspect      # to get variable names
+#import inspect      # to get variable names
 
 # import HT-analysis modules
 import config       # global variables
