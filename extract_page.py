@@ -47,8 +47,9 @@ def get_dynamic_HTML(debug_flag, target_url):
     browser.get(target_url) #navigate to the page
 
     time.sleep(5)  #give Java Script time to catch up otherwise fails
-    dynamic_page = browser.page_source  #https://stackoverflow.com/questions/8049520/web-scraping-javascript-page-with-python
-    config.JS_dynamic_HTML = bs4.BeautifulSoup(dynamic_page, "lxml")
+    config.JS_dynamic_HTML = browser.page_source  #https://stackoverflow.com/questions/8049520/web-scraping-javascript-page-with-python
+    #dynamic_page = browser.page_source  #https://stackoverflow.com/questions/8049520/web-scraping-javascript-page-with-python
+    #config.JS_dynamic_HTML = bs4.BeautifulSoup(dynamic_page, "lxml")
     
     # close browser - choose appropriate:
     browser.close()  # doesn’t always stop the web driver that’s running in background
@@ -68,6 +69,7 @@ if __name__ == "__main__":
     
     # use beautiful soup function prettify to display page
     #pp.pprint(config.JS_dynamic_HTML)  # comment out if not needed 
-    print (config.JS_dynamic_HTML.prettify()) # comment out as not needed once catured to text file
+    soup_dynamic = bs4.BeautifulSoup(config.JS_dynamic_HTML, "lxml")
+    print (soup_dynamic.prettify()) # comment out as not needed once catured to text file
      
 
