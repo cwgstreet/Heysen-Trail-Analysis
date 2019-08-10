@@ -96,10 +96,13 @@ def get_data(debug_flag):
         # ids = []
         # for tripid in tripidx[0]:
         #     ids.append(str(tripid))    
-        ids = [str(tripid) for tripid in config.tripidx[0]]  #list comprehension
+        ids = [str(tripid) for tripid in config.tripidx]  #list comprehension
         
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
         debug.debug_val_type(ids, debug_flag)
         print ("\t count =",len(ids)) 
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')  #make it easier to find start of output
+
     
         heysen_row = []   #need empty list to append Heysen data
         
@@ -121,10 +124,13 @@ def get_data(debug_flag):
             debug.debug_val_type(target_url, debug_flag)  # debug code:  target URLs
     
             # get JS generated dynamic HTML page
-            JS_dynamic_HTML = extract_page.get_dynamic_HTML(debug_flag, target_url)
+            # JS_dynamic_HTML = extract_page.get_dynamic_HTML(debug_flag, target_url)
+            extract_page.get_dynamic_HTML(debug_flag, target_url)
+
+            
             
             # Parse  JS_dynamic_HTML  variable, and store it in Beautiful Soup format
-            soup_JS_dynamic = bs4.BeautifulSoup(JS_dynamic_HTML, "lxml")
+            soup_JS_dynamic = bs4.BeautifulSoup(config.JS_dynamic_HTML, "lxml")
             
             # use beautiful soup function prettify to display page
             #print (soup_JS_dynamic.prettify()) # comment out as not needed once captured to text file
@@ -223,29 +229,42 @@ def get_data(debug_flag):
             debug.debug_val_type(difficulty, debug_flag)
 
             #-------Total Duration (total_duration) ---------
-            total_duration = durations[0]            
-            total_duration_time_obj = datetime.datetime.strptime(total_duration, '%Hh %Mm %Ss')   
-            total_duration = total_duration_time_obj   
-            debug.debug_time(total_duration, debug_flag)
-            total_duration = [total_duration]
-            debug.debug_val_type(total_duration, debug_flag)
+            try:
+                total_duration = durations[0] 
+                total_duration_time_obj = datetime.datetime.strptime(total_duration, '%Hh %Mm %Ss')   
+                total_duration = total_duration_time_obj   
+                debug.debug_time(total_duration, debug_flag)
+                total_duration = [total_duration]
+                debug.debug_val_type(total_duration, debug_flag)  
+            except:    # trap any error 
+                total_duration = [] 
+                debug.debug_val_type(total_duration, debug_flag)  
+
             
             #-------Active Duration (active_duration) ---------
-            active_duration = durations[1]
-            active_duration_time_obj = datetime.datetime.strptime(active_duration, '%Hh %Mm %Ss')   
-            active_duration = active_duration_time_obj
-            debug.debug_time(active_duration, debug_flag)
-            active_duration = [active_duration]
-            debug.debug_val_type(active_duration, debug_flag)
+            try:
+                active_duration = durations[1]
+                active_duration_time_obj = datetime.datetime.strptime(active_duration, '%Hh %Mm %Ss')   
+                active_duration = active_duration_time_obj
+                debug.debug_time(active_duration, debug_flag)
+                active_duration = [active_duration]
+                debug.debug_val_type(active_duration, debug_flag)
+            except:    # trap any error 
+                active_duration = [] 
+                debug.debug_val_type(active_duration, debug_flag)  
 
             #-------Paused Duration (paused_duration) ---------
-            paused_duration = durations[2]
-            paused_duration_time_obj = datetime.datetime.strptime(paused_duration, '%Hh %Mm %Ss')   
-            paused_duration = paused_duration_time_obj
-            debug.debug_time(paused_duration, debug_flag)
-            paused_duration = [paused_duration]
-            debug.debug_val_type(paused_duration, debug_flag)
-            
+            try:
+                paused_duration = durations[2]
+                paused_duration_time_obj = datetime.datetime.strptime(paused_duration, '%Hh %Mm %Ss')   
+                paused_duration = paused_duration_time_obj
+                debug.debug_time(paused_duration, debug_flag)
+                paused_duration = [paused_duration]
+                debug.debug_val_type(paused_duration, debug_flag)
+            except:    # trap any error 
+                paused_duration = [] 
+                debug.debug_val_type(paused_duration, debug_flag)  
+   
             #------- Distance (distance) ---------
             distance = soup_JS_dynamic.find('div', class_ ="content_distance")
             distance = str(distance)   # convests distance into string
