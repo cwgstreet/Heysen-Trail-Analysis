@@ -34,9 +34,9 @@ def csv_read(PATH, NAME):
 
 def csv_write(PATH, NAME, contents):
     """writes list called contents into a csv file"""
-    with open(PATH + NAME, 'w') as csvFile:
+    with open(PATH + NAME, 'a') as csvFile:  #note: 'a' means open for writing - append
             writer = csv.writer(csvFile)
-            writer.writerows([config.tripidx])  #https://stackoverflow.com/questions/15129567/csv-writer-writing-each-character-of-word-in-separate-column-cell
+            writer.writerows([contents])  # https://stackoverflow.com/questions/15129567/csv-writer-writing-each-character-of-word-in-separate-column-cell
     csvFile.close()
 
 

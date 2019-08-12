@@ -58,8 +58,8 @@ def debug_val_type(debug_target, debug_flag):
         when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
-        print("\n"+retrieve_name(debug_target)+" = ",debug_target)
-        print("\t"+retrieve_name(debug_target)+" type:",type(debug_target))
+        print("\n" + retrieve_name(debug_target) + " = ", debug_target)
+        print("\t" + retrieve_name(debug_target) + " type:", type(debug_target))
 
 
 def debug_count(debug_target, debug_flag):
@@ -67,7 +67,7 @@ def debug_count(debug_target, debug_flag):
         when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
-        print("\n"+retrieve_name(debug_target)+"count: ",len(debug_target))
+        print("\n" + retrieve_name(debug_target) + " count: ", len(debug_target))
  
   
 def debug_date(debug_target, debug_flag):
@@ -92,3 +92,12 @@ def debug_datetime(debug_target, debug_flag):
         print('Time:', debug_target.time())   
         print('Date-time:', debug_target)     
 
+
+def debug_df(debug_target, debug_flag):
+    """prints dataframe and df stats when switch debug_flag = True"""
+    if debug_flag:
+        var_name = str(debug_target)
+        print("\n" + retrieve_name(debug_target) + " dataframe ", debug_target, sep='\n')
+        print("\t" + retrieve_name(debug_target) + " dataframe ", debug_target, sep='\n')
+        print("\t" + retrieve_name(debug_target) + " dataframe ", debug_target, sep='\n')
+        

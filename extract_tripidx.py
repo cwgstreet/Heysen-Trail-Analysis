@@ -24,25 +24,28 @@ import debug        # debug functions - variable values / types / counts
 import extract_page # extract dynamic JS generated (inner) HTML
 import file_io      # write / read csv files to local disk
 
+#import third party libary specific imports
+import bs4      # beautiful soup 4 library to parse website
+import lxml     # lxml to parse website
 
-def get_tripidx(debug_flag):
+# import specific third party libaries
+#from selenium import webdriver
+
+
+def get_tripidx(debug_flag, FILEPATH, TRIPID_FILENAME="tripidx.csv"):
     """Extract gstreet trip ids (tripidx) from rambl.com html """
-    
-    PATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/"
-    NAME = "tripidx.csv"
-
-      
+          
     # Avoid unecessary web scraping if tripidx list exists as csv file    
-    if os.path.isfile(PATH + NAME):  #confirms file exists
-        debug.console_msg('Importing tripidx.csv into tripidx[] list')
+    if os.path.isfile(FILEPATH + TRIPID_FILENAME):  #confirms file exists
+        debug.console_msg('\ttripidx.csv file exists! \n\tImporting tripidx.csv into tripidx[] list')
         
-        config.tripidx = file_io.csv_read(PATH, NAME)
+        config.tripidx = file_io.csv_read(FILEPATH, TRIPID_FILENAME)
             
         debug.debug_val_type(config.tripidx, debug_flag)  # debug code:  page numbers
         debug.debug_count(config.tripidx, debug_flag)
 
     else:
-        debug.console_msg('tripidx.csv file does not exist \n\tWill scrape ramblr.com for data')
+        debug.console_msg('tripidx.csv file does not exist! \n\tWill scrape ramblr.com for data')
         
         page_numbers = [str(x) for x in range(1,5)]  #list comprehension; create list of strings
         debug.debug_val_type(page_numbers, debug_flag)  # debug code:  page numbers
@@ -71,7 +74,9 @@ def get_tripidx(debug_flag):
             extract_page.get_dynamic_HTML(debug_flag, target_url)
             
             # Extract tripidx values from Trail Journal web page
-            tripidx_string = str(config.JS_dynamic_HTML.find_all('div', class_ = "lists pr nomysession") )	# note: class_ uses trailing "_" to avoid conflict
+            
+            soup_dynamic = bs4.BeautifulSoup(config.JS_dynamic_HTML, "lxml")
+            tripidx_string = str(soup_dynamic.find_all('div', class_ = "lists pr nomysession") )	# note: class_ uses trailing "_" to avoid conflict
 
             tripidx_extract =[str(s) for s in re.findall(r'data-tripidx="(\d+)', tripidx_string)]
                 
@@ -82,7 +87,7 @@ def get_tripidx(debug_flag):
         debug.debug_count(config.tripidx, debug_flag)
                     
         # write and save scraped tripidx data to csv file        
-        file_io.csv_write(PATH, NAME, config.tripidx)
+        file_io.csv_write(FILEPATH, TRIPID_FILENAME, config.tripidx)
 
 
 if __name__ == "__main__":
@@ -91,5 +96,8 @@ if __name__ == "__main__":
     debug_flag = True
     debug.debug_status(debug_flag)
 
-    get_tripidx(debug_flag)            
+    FILEPATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/"
+    TRIPID_FILENAME = "tripidx.csv"
+
+    get_tripidx(debug_flag, FILEPATH, TRIPID_FILENAME)            
     
