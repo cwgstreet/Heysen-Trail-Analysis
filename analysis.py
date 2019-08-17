@@ -46,7 +46,7 @@ def load_df(debug_flag, HT_DATA):
     
     """ create pandas dataframe from zipped list"""
     
-    df = pd.DataFrame(zippedList, columns = ['trip_id', 'title', 'day',
+    df = pd.DataFrame(HT_DATA, columns = ['trip_id', 'title', 'day',
                                             'date', 'start', 'stop',
                                             'council', 'total_duration',
                                             'active_duration', 
@@ -70,24 +70,38 @@ if __name__ == "__main__":
     debug_flag = True
     debug.debug_status(debug_flag)
 
-    FILEPATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/"
+    FILEPATH = str("/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/")
     TRIPID_FILENAME = "tripidx.csv"
-    DATA_FILENAME = "heysen_data.csv"
+    DATA_FILENAME = str("heysen_data.csv")
     
     print("file at:" + FILEPATH + DATA_FILENAME)
     
     # load up or extract Heysen data from ramblr.com
-    extract_data.get_data(debug_flag, FILEPATH, config.HT_data)  
+    extract_data.get_data(debug_flag, FILEPATH, DATA_FILENAME)  
     
+    print("----------------------------------------------------------")
+    debug.debug_val_type(config.HT_data, debug_flag)
+    
+    print("\n\n")  #two blank lines
+
+    print("----------------------------------------------------------")
+    df = pd.DataFrame(config.HT_data, columns = ['trip_id', 'title', 'day',
+                                                'date', 'start', 'stop',
+                                                'council', 'total_duration',
+                                                'active_duration', 
+                                                'paused_duration' , 'distance',
+                                                'avg_speed', 'highest_point', 
+                                                'total_ascent', 'difficulty'] ) 
+
     # created dataframe
-    load_df(debug_flag)
+    #load_df(debug_flag, config.HT_data)
               
 
-    print("Dataframe : " , df, sep='\n')
+    # print("Dataframe : " , df, sep='\n')
     
-    print("/n/n")
+    # print("/n/n")
     
-    print(df.head)
+    # print(df.head)
 
 # print('############################################################')  #make it easier to find this section in terminal output
 
