@@ -35,6 +35,8 @@ import file_io          # write / read csv files to local disk
 import bs4      # beautiful soup 4 library to parse website
 import lxml     # lxml to parse website
 import requests # requests to get http
+import pandas as pd # pandas to create dataframes
+
 
 # import specific third party libaries
 from selenium import webdriver
@@ -100,9 +102,12 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
     
         # Capture web page info for each URL
         for index, URL in enumerate(URLs):
-            target_url = URL  #work through full list of URLs
+            # target_url = URL  #work through full list of URLs
             #target_url =  "https://www.ramblr.com/web/mymap/trip/478170/1576327" #debug test case - contains log data
             #target_url = "https://www.ramblr.com/web/mymap/trip/478170/1443174"   #debug test case - no log data
+            #target_url = "https://www.ramblr.com/web/mymap/trip/478170/1580868"  #missing distance day 51
+            #target_url = "https://www.ramblr.com/web/mymap/trip/478170/1552592" #missing distance day 31
+            target_url = "https://www.ramblr.com/web/mymap/trip/478170/1546785" #missing distance day 29
 
             debug.console_msg('extracted data follows:')                        
             debug.debug_val_type(target_url, debug_flag)  # debug code:  target URLs
@@ -127,7 +132,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             #------- extract title string ---------
             Title = soup_JS_dynamic.h1
             Title = str(Title)  #must be string for next operation
-            Title = Title.replace("&amp;", "&")  #fix string as special character "&" isn't rendered (escaped)
+            Title = Title.replace("&amp;", "&")  #fix string encoding issue as special character "&" isn't rendered (escaped)
             title = Title[Title.find("h1>")+3:Title.find("</h1>")]
             title = str(title)
             debug.debug_val_type(title, debug_flag)
@@ -351,6 +356,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
         file_io.csv_write(FILEPATH, DATA_FILENAME, HT_zipdata)
         
         config.HT_data = HT_zipdata  # write to global so data can pass between modules
+         
         
         
 
@@ -368,19 +374,19 @@ if __name__ == "__main__":
     get_data(debug_flag, FILEPATH, DATA_FILENAME)            
 
 
-# print('############################################################')  #make it easier to find this section in terminal output
+print('############################################################')  #make it easier to find this section in terminal output
 
-# # create dataframe from zipped list
-# df = pd.DataFrame(zippedList, columns = ['trip_id', 'title', 'day',
-                                            # 'date', 'start', 'stop',
-                                            # 'council', 'total_duration',
-                                            # 'active_duration', 
-                                            # 'paused_duration' , 'distance',
-                                            # 'avg_speed', 'highest_point', 
-                                            # 'total_ascent', 'difficulty'] ) 
+# create dataframe from zipped list
+df = pd.DataFrame(config.HT_data, columns = ['trip_id', 'title', 'day',
+                                            'date', 'start', 'stop',
+                                            'council', 'total_duration',
+                                            'active_duration', 
+                                            'paused_duration' , 'distance',
+                                            'avg_speed', 'highest_point', 
+                                            'total_ascent', 'difficulty'] ) 
                                             
-# print("Dataframe : " , df, sep='\n')
-# df.to_csv(path_or_buf='test_df.csv', encoding='utf-8')
+print("Dataframe : " , df, sep='\n')
+df.to_csv(path_or_buf='test_df.csv', encoding='utf-8')
 
 ##################################################################################################################
 

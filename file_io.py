@@ -37,7 +37,9 @@ def csv_write(PATH, NAME, contents):
     with open(PATH + NAME, 'a') as csvFile:  #note: 'a' means open for writing - append
             writer = csv.writer(csvFile)
             writer.writerows([contents])  # https://stackoverflow.com/questions/15129567/csv-writer-writing-each-character-of-word-in-separate-column-cell
+            # writerow vs writerows: https://stackoverflow.com/questions/33091980/difference-between-writerow-and-writerows-methods-of-python-csv-module
     csvFile.close()
+
 
 
 # test code follows:          
