@@ -41,14 +41,14 @@ def get_tripidx(debug_flag, FILEPATH, TRIPID_FILENAME="tripidx.csv"):
         
         config.tripidx = file_io.csv_read(FILEPATH, TRIPID_FILENAME)
             
-        debug.debug_val_type(config.tripidx, debug_flag)  # debug code:  page numbers
-        debug.debug_count(config.tripidx, debug_flag)
+        debug.val_type(config.tripidx, debug_flag)  # debug code:  page numbers
+        debug.list_count(config.tripidx, debug_flag)
 
     else:
         debug.console_msg('tripidx.csv file does not exist! \n\tWill scrape ramblr.com for data')
         
         page_numbers = [str(x) for x in range(1,5)]  #list comprehension; create list of strings
-        debug.debug_val_type(page_numbers, debug_flag)  # debug code:  page numbers
+        debug.val_type(page_numbers, debug_flag)  # debug code:  page numbers
     
         URL_prefix = "https://www.ramblr.com/web/mymap/trip/478170#h=1&u_uid=478170&type=1&unit=1&page="
         URL_suffix = "&stext=&active=0&sort=10&receivegid="
@@ -58,7 +58,7 @@ def get_tripidx(debug_flag, FILEPATH, TRIPID_FILENAME="tripidx.csv"):
         for page in page_numbers:
             URL = (URL_prefix + page + URL_suffix)
             URLs.append(URL)
-            debug.debug_val_type(URL, debug_flag)  # debug code:  page numbers
+            debug.val_type(URL, debug_flag)  # debug code:  page numbers
             
         # Capture tripidx data from target web pages and load into a list
         for URL in URLs:
@@ -83,8 +83,8 @@ def get_tripidx(debug_flag, FILEPATH, TRIPID_FILENAME="tripidx.csv"):
             config.tripidx.extend(tripidx_extract)
                     
         config.tripidx.sort()    
-        debug.debug_val_type(config.tripidx, debug_flag)  # debug code:  target_url
-        debug.debug_count(config.tripidx, debug_flag)
+        debug.val_type(config.tripidx, debug_flag)  # debug code:  target_url
+        debug.list_count(config.tripidx, debug_flag)
                     
         # write and save scraped tripidx data to csv file        
         file_io.csv_write(FILEPATH, TRIPID_FILENAME, config.tripidx)
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     
     # Set debugging status: on=True or off=False
     debug_flag = True
-    debug.debug_status(debug_flag)
+    debug.status_msg(debug_flag)
 
     FILEPATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/"
     TRIPID_FILENAME = "tripidx.csv"

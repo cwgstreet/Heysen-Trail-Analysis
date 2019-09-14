@@ -53,7 +53,7 @@ def console_msg(msg):
           \n+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 
-def debug_val_type(debug_target, debug_flag):
+def val_type(debug_target, debug_flag):
     """Prints variable name, value and type to console window
         when switch debug_flag = True"""
     if debug_flag:
@@ -62,7 +62,7 @@ def debug_val_type(debug_target, debug_flag):
         print("\t" + retrieve_name(debug_target) + " type:", type(debug_target))
 
 
-def debug_count(debug_target, debug_flag):
+def list_count(debug_target, debug_flag):
     """Prints element count of list to console window
         when switch debug_flag = True"""
     if debug_flag:
@@ -70,21 +70,21 @@ def debug_count(debug_target, debug_flag):
         print("\n" + retrieve_name(debug_target) + " count: ", len(debug_target))
  
   
-def debug_date(debug_target, debug_flag):
+def date_value(debug_target, debug_flag):
     """Prints date value to console when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
         print('\nDate:', debug_target.date())   
 
 
-def debug_time(debug_target, debug_flag):
+def time_value(debug_target, debug_flag):
     """Prints time value to console when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
         print('Time:', debug_target.time())   
    
         
-def debug_datetime(debug_target, debug_flag):
+def date_time_value(debug_target, debug_flag):
     """Prints date, time and date-time values to console when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)
@@ -92,8 +92,7 @@ def debug_datetime(debug_target, debug_flag):
         print('Time:', debug_target.time())   
         print('Date-time:', debug_target)     
 
-
-def debug_df(debug_target, debug_flag):
+def print_df(debug_target, debug_flag):
     """prints dataframe and df stats when switch debug_flag = True"""
     if debug_flag:
         var_name = str(debug_target)

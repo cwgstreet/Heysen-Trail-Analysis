@@ -42,56 +42,57 @@ import pandas as pd # pandas to create dataframes
 # from selenium import webdriver
 
 
-def load_df(debug_flag, HT_DATA):
+# def load_df(debug_flag, HT_DATA):
     
-    """ create pandas dataframe from zipped list"""
+    # """ create pandas dataframe from zipped list"""
     
-    df = pd.DataFrame(HT_DATA, columns = ['trip_id', 'title', 'day',
-                                            'date', 'start', 'stop',
-                                            'council', 'total_duration',
-                                            'active_duration', 
-                                            'paused_duration' , 'distance',
-                                            'avg_speed', 'highest_point', 
-                                            'total_ascent', 'difficulty'] ) 
+    # df = pd.DataFrame(HT_DATA, columns = ['trip_id', 'title', 'day',
+                                            # 'date', 'start', 'stop',
+                                            # 'council', 'total_duration',
+                                            # 'active_duration', 
+                                            # 'paused_duration' , 'distance',
+                                            # 'avg_speed', 'highest_point', 
+                                            # 'total_ascent', 'difficulty'] ) 
     
-    debug.print_df
+    # debug.print_df
 
-def export_df(debug_flag, FILEPATH, DATA_FILENAME, DF_FILENAME):
-    """ write dataframe to csv file"""
-    df.to_csv(path_or_buf='test_df.csv', encoding='utf-8')
+def load_df_csv(debug_flag, FILEPATH, DF_FILENAME):
+    """ create pandas dataframe from csv file"""
     
-    
-    
+    df = pd.read_csv(FILEPATH + DF_FILENAME, index_col=0)
+    #df = pd.read_csv("/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/data/heysen_df_scrubbed.csv", index_col=0)
+    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    debug.print_df(df, debug_flag)
+    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    return df
+
+# def export_df(debug_flag, FILEPATH, DF_FILENAME):
+    # """ write dataframe to csv file"""
+    # df.to_csv(path_or_buf='test_df.csv', encoding='utf-8')
     
     
 if __name__ == "__main__":
   
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
     # # Set debugging status: on=True or off=False
     debug_flag = True
-    debug.debug_status(debug_flag)
+    debug.status_msg(debug_flag)
 
-    FILEPATH = str("/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/")
-    TRIPID_FILENAME = "tripidx.csv"
-    DATA_FILENAME = str("heysen_data.csv")
+    FILEPATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/data/"
+    # TRIPID_FILENAME = "tripidx.csv"
+    DF_FILENAME = "heysen_df_scrubbed.csv"
     
-    print("file at:" + FILEPATH + DATA_FILENAME)
-    
-    # load up or extract Heysen data from ramblr.com
-    extract_data.get_data(debug_flag, FILEPATH, DATA_FILENAME)  
     
     print("----------------------------------------------------------")
-    debug.debug_val_type(config.HT_data, debug_flag)
-    
-    print("\n\n")  #two blank lines
 
-    print("----------------------------------------------------------")
-    df = pd.DataFrame(config.HT_data, columns = ['trip_id', 'title', 'day',
-                                                'date', 'start', 'stop',
-                                                'council', 'total_duration',
-                                                'active_duration', 
-                                                'paused_duration' , 'distance',
-                                                'avg_speed', 'highest_point', 
-                                                'total_ascent', 'difficulty'] ) 
+    print("file located at:" + FILEPATH + DF_FILENAME)
+    
+    # load df from csv file
+    df = load_df_csv(debug_flag, FILEPATH, DF_FILENAME)
+    print("Dataframe : " , df, sep='\n')
+
+    print("\n----------------------------------------------------------")
 
     # created dataframe
     #load_df(debug_flag, config.HT_data)

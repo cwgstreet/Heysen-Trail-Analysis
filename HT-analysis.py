@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     # Set debugging status: on=True or off=False
     debug_flag = True
-    debug.debug_status(debug_flag)
+    debug.status_msg(debug_flag)
     
     # Extract gstreet trip ids (tripidx) from rambl.com html
     extract_tripidx.get_tripidx(debug_flag)    
@@ -115,7 +115,7 @@ if __name__ == "__main__":
             # reader = csv.reader(f)
             # tripidx = list(reader)
             
-        # debug.debug_val_type(tripidx, debug_flag)
+        # debug.val_type(tripidx, debug_flag)
         
     # else:
         
@@ -139,13 +139,13 @@ if __name__ == "__main__":
         
         # ids = [str(tripid) for tripid in tripidx[0]]  #list comprehension
         
-        # debug.debug_val_type(ids, debug_flag)
+        # debug.val_type(ids, debug_flag)
         # print ("\t count =",len(ids)) 
     
         # for id in ids:
             # URL = (URL_prefix + id)
             # URLs.append(URL)
-            # debug.debug_val_type(URL, debug_flag)  # debug code:  target URLs
+            # debug.val_type(URL, debug_flag)  # debug code:  target URLs
     
         # # ------------------------------------------------------------------
         # # Capture web page info for each URL
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         # for URL in URLs:
             # #target_url = URL
             # target_url = "https://www.ramblr.com/web/mymap/trip/478170/1576327 #debug test case"
-            # debug.debug_val_type(target_url, debug_flag)  # debug code:  target URLs
+            # debug.val_type(target_url, debug_flag)  # debug code:  target URLs
     
             # # get JS generated dynamic HTML page
             # JS_dynamic_HTML = get_dynamic_HTML(target_url)

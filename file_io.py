@@ -47,7 +47,7 @@ if __name__ == "__main__":
     
     # Set debugging status: on=True or off=False
     debug_flag = True
-    debug.debug_status(debug_flag)
+    debug.status_msg(debug_flag)
     
     
     # ---------------- Test CSV Read -----------------------------------
@@ -56,8 +56,8 @@ if __name__ == "__main__":
     
     config.tripidx = csv_read(PATH, NAME)
     
-    debug.debug_val_type(config.tripidx, debug_flag)  # debug code:  page numbers
-    debug.debug_count(config.tripidx, debug_flag)
+    debug.val_type(config.tripidx, debug_flag)  # debug code:  page numbers
+    debug.list_count(config.tripidx, debug_flag)
     
     
     # ---------------- Test CSV Write -----------------------------------

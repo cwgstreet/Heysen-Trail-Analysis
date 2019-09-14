@@ -60,7 +60,7 @@ if __name__ == "__main__":
     
     # Set debugging status: on=True or off=False
     debug_flag = True
-    debug.debug_status(debug_flag)
+    debug.status_msg(debug_flag)
 
     # set test page
     target_url = "https://www.ramblr.com/web/mymap/trip/478170/1510167/"

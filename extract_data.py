@@ -51,7 +51,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
         debug.console_msg('\t heysen_data.csv file exists! \n\tImporting heysen_data.csv into HT_data[] list')
         
         config.HT_data = file_io.csv_read(FILEPATH, DATA_FILENAME)
-        debug.debug_val_type(config.HT_data, debug_flag)
+        debug.val_type(config.HT_data, debug_flag)
         
     else:
         
@@ -73,8 +73,8 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
         #     ids.append(str(tripid))    
         ids = [str(tripid) for tripid in config.tripidx]  #list comprehension
         
-        debug.debug_val_type(ids, debug_flag)
-        debug.debug_count(ids, debug_flag)
+        debug.val_type(ids, debug_flag)
+        debug.list_count(ids, debug_flag)
     
         #initialise empty lists to append extracted data into later
         heysen_row = []   
@@ -98,7 +98,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
         for id in ids:
             URL = (URL_prefix + id)
             URLs.append(URL)
-            debug.debug_val_type(URL, debug_flag)  # debug code:  target URLs
+            debug.val_type(URL, debug_flag)  # debug code:  target URLs
     
         # Capture web page info for each URL
         for index, URL in enumerate(URLs):
@@ -110,7 +110,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             target_url = "https://www.ramblr.com/web/mymap/trip/478170/1546785" #missing distance day 29
 
             debug.console_msg('extracted data follows:')                        
-            debug.debug_val_type(target_url, debug_flag)  # debug code:  target URLs
+            debug.val_type(target_url, debug_flag)  # debug code:  target URLs
         
             # get JS generated dynamic HTML page
             extract_page.get_dynamic_HTML(debug_flag, target_url)
@@ -135,17 +135,17 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             Title = Title.replace("&amp;", "&")  #fix string encoding issue as special character "&" isn't rendered (escaped)
             title = Title[Title.find("h1>")+3:Title.find("</h1>")]
             title = str(title)
-            debug.debug_val_type(title, debug_flag)
+            debug.val_type(title, debug_flag)
             title = [title]
             if not title:        #check for empty list; add null (None) placeholder if empty
                 title = [None]
-            debug.debug_val_type(title, debug_flag)
+            debug.val_type(title, debug_flag)
             
             #------- Day (day)---------
             day = [int(s) for s in re.findall(r'\b\d+\b', Title)]
             if not day:        #check for empty list; add null (None) placeholder if empty
                 day = [None]
-            debug.debug_val_type(day, debug_flag)
+            debug.val_type(day, debug_flag)
               
             #------- Start Location (start_location) ---------
             keyword = " - "
@@ -156,7 +156,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             start = [start]
             if not start:        #check for empty list; add null (None) placeholder if empty
                 start = [None]
-            debug.debug_val_type(start, debug_flag)
+            debug.val_type(start, debug_flag)
             
             #------- Stop Location (stop_location) ---------
             keyword3 = '<'  #change split keyword to further seperate third tuple element
@@ -165,12 +165,12 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             stop = [stop]
             if not stop:        #check for empty list; add null (None) placeholder if empty
                 stop = [None]
-            debug.debug_val_type(stop, debug_flag)
+            debug.val_type(stop, debug_flag)
             
             #------- Title (title) ---------
             # title=Title[Title.find("h1>")+3:Title.find("</h1>")]
             # title = [title]
-            # debug.debug_val_type(title, debug_flag)
+            # debug.val_type(title, debug_flag)
             
             #-------Council (council)) ---------
             location = soup_JS_dynamic.find('div', class_ ="content_addr")
@@ -179,7 +179,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             council = [council]
             if not council:        #check for empty list; add null (None) placeholder if empty
                 council = [None]
-            debug.debug_val_type(council, debug_flag)
+            debug.val_type(council, debug_flag)
 
             #-------Recording Date (date) ---------
             recording_date = soup_JS_dynamic.find('div', class_ ="content_recoding_time")
@@ -187,7 +187,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             recording_date = recording_date.strip()   # importnt to strio leading / trailing whitespace to avoid strptime format problems
 
             date_timestamp = recording_date[recording_date.find(":")+2:recording_date.find(" <")-5]
-            debug.debug_val_type(date_timestamp, debug_flag)
+            debug.val_type(date_timestamp, debug_flag)
 
             try:
                 # normal strptime format below
@@ -201,17 +201,17 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
                 print("cannot parse recording date - unhknown format")
             
             date = recording_date_time_obj
-            debug.debug_datetime(date, debug_flag)
+            debug.date_time_value(date, debug_flag)
             date = [date]
             if not date:        #check for empty list; add null (None) placeholder if empty
                 date = [None]
-            debug.debug_val_type(date, debug_flag)
+            debug.val_type(date, debug_flag)
 
             #------- Extract all Durations (durations) ---------
             durations = soup_JS_dynamic.find_all('li', class_ ="aft")
             durations = str(durations)
             durations = re.findall("\d+[h]\s\d+[m]\s\d+[s]", durations) 
-            debug.debug_val_type(durations, debug_flag)
+            debug.val_type(durations, debug_flag)
             
             #------- Difficulty (difficulty)---------
             difficulty = soup_JS_dynamic.find_all('li', class_ ="aft")
@@ -220,49 +220,49 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             #difficulty = [difficulty]
             if not difficulty:        #check for empty list; add null (None) placeholder if empty
                 difficulty = [None]
-            debug.debug_val_type(difficulty, debug_flag)
+            debug.val_type(difficulty, debug_flag)
 
             #-------Total Duration (total_duration) ---------
             try:
                 total_duration = durations[0] 
                 total_duration_time_obj = datetime.datetime.strptime(total_duration, '%Hh %Mm %Ss')   
                 total_duration = total_duration_time_obj   
-                debug.debug_time(total_duration, debug_flag)
+                debug.time_value(total_duration, debug_flag)
                 total_duration = [total_duration]
                 if not total_duration:        #check for empty list; add null (None) placeholder if empty
                     total_duration = [None]
-                debug.debug_val_type(total_duration, debug_flag)  
+                debug.val_type(total_duration, debug_flag)  
             except:    # trap any error 
                 total_duration = [None] 
-                debug.debug_val_type(total_duration, debug_flag)  
+                debug.val_type(total_duration, debug_flag)  
 
             #-------Active Duration (active_duration) ---------
             try:
                 active_duration = durations[1]
                 active_duration_time_obj = datetime.datetime.strptime(active_duration, '%Hh %Mm %Ss')   
                 active_duration = active_duration_time_obj
-                debug.debug_time(active_duration, debug_flag)
+                debug.time_value(active_duration, debug_flag)
                 active_duration = [active_duration]
                 if not tactive_duration:        #check for empty list; add null (None) placeholder if empty
                     active_duration = [None]
-                debug.debug_val_type(active_duration, debug_flag)
+                debug.val_type(active_duration, debug_flag)
             except:    # trap any error 
                 active_duration = [None] 
-                debug.debug_val_type(active_duration, debug_flag)  
+                debug.val_type(active_duration, debug_flag)  
 
             #-------Paused Duration (paused_duration) ---------
             try:
                 paused_duration = durations[2]
                 paused_duration_time_obj = datetime.datetime.strptime(paused_duration, '%Hh %Mm %Ss')   
                 paused_duration = paused_duration_time_obj
-                debug.debug_time(paused_duration, debug_flag)
+                debug.time_value(paused_duration, debug_flag)
                 paused_duration = [paused_duration]
                 if not paused_duration:        #check for empty list; add null (None) placeholder if empty
                     paused_duration = [None]
-                debug.debug_val_type(paused_duration, debug_flag)
+                debug.val_type(paused_duration, debug_flag)
             except:    # trap any error 
                 paused_duration = [None] 
-                debug.debug_val_type(paused_duration, debug_flag)  
+                debug.val_type(paused_duration, debug_flag)  
    
             #------- Distance (distance) ---------
             distance = soup_JS_dynamic.find('div', class_ ="content_distance")
@@ -270,7 +270,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             distance = [float(s) for s in re.findall(r'\d+\.\d+', distance)]
             if not distance:        #check for empty list; add null (None) placeholder if empty
                 distance = [None]
-            debug.debug_val_type(distance, debug_flag)
+            debug.val_type(distance, debug_flag)
             
             #------- Total Ascent (total_ascent)---------
             total_ascent = soup_JS_dynamic.find('div', class_ ="content_total_ascent")
@@ -278,7 +278,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             total_ascent = [int(s) for s in re.findall(r'\b\d+\b', total_ascent)]
             if not total_ascent:        #check for empty list; add null (None) placeholder if empty
                 total_ascent = [None]
-            debug.debug_val_type(total_ascent, debug_flag)
+            debug.val_type(total_ascent, debug_flag)
             
             #------- Highest Point (highest_point)---------
             highest_point = soup_JS_dynamic.find('div', class_ ="content_highest_point")
@@ -286,7 +286,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             highest_point = [int(s) for s in re.findall(r'\b\d+\b', highest_point)]
             if not highest_point:        #check for empty list; add null (None) placeholder if empty
                 highest_point = [None]
-            debug.debug_val_type(highest_point, debug_flag)
+            debug.val_type(highest_point, debug_flag)
             
             #------- Average Speed (avg_spped)---------
             avg_speed = soup_JS_dynamic.find('div', class_ ="content_avg_speed")
@@ -294,7 +294,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
             avg_speed = [float(s) for s in re.findall(r'\d+\.\d+', avg_speed)]
             if not avg_speed:        #check for empty list; add null (None) placeholder if empty
                 avg_speed = [None]
-            debug.debug_val_type(avg_speed, debug_flag)
+            debug.val_type(avg_speed, debug_flag)
             
             tempidlist = []
             tempidlist.append(config.tripidx[index])
@@ -334,9 +334,9 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
         ascent_list  = list(itertools.chain(*ascent_list))  
         dif_list  = list(itertools.chain(*dif_list))  
 
-        debug.debug_val_type(id_list, debug_flag)
-        debug.debug_val_type(tit_list, debug_flag)
-        debug.debug_val_type(speed_list, debug_flag)
+        debug.val_type(id_list, debug_flag)
+        debug.val_type(tit_list, debug_flag)
+        debug.val_type(speed_list, debug_flag)
 
         HT_zipdata = list(zip(id_list, tit_list, day_list, date_list, 
                                 start_list, stop_list, council_list, 
@@ -344,7 +344,7 @@ def get_data(debug_flag, FILEPATH, DATA_FILENAME = "heysen_data.csv"):
                                 pause_dur_list, dist_list, speed_list, 
                                 height_list, ascent_list, dif_list) )
         
-        debug.debug_val_type(HT_zipdata, debug_flag)
+        debug.val_type(HT_zipdata, debug_flag)
         
         print("\n\n")  #two blank lines
         
@@ -365,7 +365,7 @@ if __name__ == "__main__":
   
     # Set debugging status: on=True or off=False
     debug_flag = True
-    debug.debug_status(debug_flag)
+    debug.status_msg(debug_flag)
 
     FILEPATH = "/Users/carlwgreenstreet/Documents/Git/Heysen-Trail-Analysis/"
     TRIPID_FILENAME = "tripidx.csv"
